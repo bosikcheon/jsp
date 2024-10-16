@@ -10,21 +10,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @SuppressWarnings("serial")
-@WebServlet({ "/Test4", "/T4", "/T04"})
-public class Test04 extends HttpServlet {
-
+//@WebServlet({"/Test06", "/T06"})
+public class Test06 extends HttpServlet {
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html; charset=utf-8");
-		System.out.println("이곳은 Test4 서블릿 파일 입니다.(Get)");
-		//response.getWriter().append("Served at4: ").append(request.getContextPath()).append("<br/>: Hello~~~");
+		System.out.println("이곳은 Test06 서블릿의 Get");
 		
 		PrintWriter out = response.getWriter();
-		out.println("<p><a href='/javaGroup/study/1014/test02.jsp'>test02.jsp로 복귀</a></p>");
+		
+		out.println("<p><a href='/javaGroup/study/1014/test06.jsp'>돌아가기(test06.jsp)</a></p>");
 	}
-
+	
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("이곳은 Test4 서블릿 파일 입니다.(Post)");
+		System.out.println("이곳은 Test06 서블릿의 Post");
 		doGet(request, response);
 	}
-
 }

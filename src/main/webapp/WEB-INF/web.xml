@@ -9,4 +9,35 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  
+  <!-- Controller 설정 -->
+  <servlet>
+  	<servlet-name>test06</servlet-name>
+    <servlet-class>study.j1014.Test06</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>test06</servlet-name>
+  	<url-pattern>/Test06</url-pattern>
+  	<url-pattern>/T06</url-pattern>
+  	<url-pattern>/T006</url-pattern>
+  </servlet-mapping>
+  <!-- 
+  <servlet>
+  	<servlet-name>t06</servlet-name>
+    <servlet-class>study.j1014.Test06</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>t06</servlet-name>
+  	<url-pattern>/T06</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>t006</servlet-name>
+  	<servlet-class>study.j1014.Test06</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>t006</servlet-name>
+    <url-pattern>/T006</url-pattern>
+  </servlet-mapping>
+  -->
 </web-app>

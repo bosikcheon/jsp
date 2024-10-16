@@ -18,7 +18,7 @@ public class Test05 extends HttpServlet {
 		
 		PrintWriter out = response.getWriter();
 		out.println("<h2>이곳은 Test5서블릿입니다.</h2>");
-		out.println("<div><a href='/javaGroup/study/1014/test3.jsp'>test3.jsp로</a></div>");
+		out.println("<div><a href='/javaGroup/study/1014/test03.jsp'>test03.jsp로</a></div>");
 		
 	}
 }
