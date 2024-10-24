@@ -8,6 +8,8 @@
   <jsp:include page="/include/bs4.jsp" />
 </head>
 <body>
+<jsp:include page="/include/header.jsp" />
+<jsp:include page="/include/nav.jsp" />
 <p><br/></p>
 <div class="container">
   <h2>JSTL(Java Standard Tag Library)</h2>
@@ -164,5 +166,6 @@
   <div>직급코드 : <font color='blue'>${kCode}</font> / 직급명 : <font color='red'>${kName}</font></div>
 </div>
 <p><br/></p>
+<jsp:include page="/include/footer.jsp" />
 </body>
 </html>
