@@ -10,7 +10,7 @@
     'use strict';
     
     if("${message}" != "NO") alert("${message}"); 
-    location.href = "${ctp}${url}";
+    location.href = "${ctp}/${url}";
   </script>
 </head>
 <body>
