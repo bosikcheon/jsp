@@ -19,12 +19,12 @@
       <input type="text" name="mid" value="admin" class="form-control mb-3" autofocus required /> 
     </div>
     <div>비밀번호를 입력하시요
-      <input type="password" name="pwd" id="pwd" value="asdf1234" class="form-control mb-3" required>
+      <input type="password" name="pwd" id="pwd" value="1234" class="form-control mb-3" required>
     </div>
     <div class="row text-center">
       <div class="col"><button type="submit" class="btn btn-success mb-2">로그인</button></div>
       <div class="col"><button type="reset" class="btn btn-warning mb-2">다시입력</button></div>
-      <div class="col"><button type="button" onclick="location.href='GuestList.gu'" class="btn btn-info">돌아가기</button></div>
+      <div class="col"><button type="button" onclick="location.href='MemberJoin.mem'" class="btn btn-info">회원가입</button></div>
     </div>
   </form>
 </div>

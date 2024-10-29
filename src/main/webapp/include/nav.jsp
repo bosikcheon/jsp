@@ -56,6 +56,9 @@
         <c:if test="${!empty sNickName}"><a class="nav-link" href="MemberLogout.mem">Logout</a></c:if>
         <c:if test="${empty sNickName}"><a class="nav-link" href="MemberLogin.mem">Login</a></c:if>
       </li>
+      <li class="nav-item">
+        <c:if test="${empty sNickName}"><a class="nav-link" href="MemberJoin.mem">Join</a></c:if>
+      </li>
     </ul>
   </div>
 </nav>

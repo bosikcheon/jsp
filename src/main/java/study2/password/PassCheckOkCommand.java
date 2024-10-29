@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import common.SecurityUtil;
 import study2.StudyInterface;
 
 public class PassCheckOkCommand implements StudyInterface {
@@ -28,6 +29,7 @@ public class PassCheckOkCommand implements StudyInterface {
 		
 		int salt = 0x1234ABCD;
 		int encPwd = 0, decPwd = 0;
+		String strEncPwd = "";
 		
 		if(flag == 1) {
 			// salt 키 : 0x1234ABCD
@@ -44,13 +46,16 @@ public class PassCheckOkCommand implements StudyInterface {
 			System.out.println("디코딩(복호화)된 비밀번호 : " + decPwd);
 			System.out.println("복호화 비밀번호와 입력비밀번호가 같으면 로그인 Ok~~~~");
 			System.out.println("~~~~~~~~~ End ~~~~~~~~~~~~~");
-		}
-		else if(flag == 2) {
 			
+			request.setAttribute("pwd", encPwd);
+		}
+		else if(flag == 4) {
+			SecurityUtil security = new SecurityUtil();
+			strEncPwd = security.encryptSHA256(pwd);
+			request.setAttribute("pwd", strEncPwd);
 		}
 		
 		
-		request.setAttribute("pwd", encPwd);
 	}
 
 }
