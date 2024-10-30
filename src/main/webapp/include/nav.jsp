@@ -32,6 +32,7 @@
 				      <a class="dropdown-item" href="${ctp}/study/1018_JSTL/jstlMenu.jsp">JSTL 연습</a>
 				      <a class="dropdown-item" href="${ctp}/study2/database/DbList">Database 연습</a>
 				      <a class="dropdown-item" href="PassCheckForm.st">암호화 연습</a>
+				      <a class="dropdown-item" href="AjaxTest.st">AJAX 연습</a>
 				    </div>
 				  </div>
 	      </li>
@@ -42,12 +43,15 @@
 				    </button>
 				    <div class="dropdown-menu">
 				      <a class="dropdown-item" href="MemberMain.mem">회원메인방</a>
-				      <a class="dropdown-item" href="#">쪽지보내기</a>
-				      <a class="dropdown-item" href="#">포인트사용내역</a>
-				      <a class="dropdown-item" href="#">일정관리</a>
 				      <a class="dropdown-item" href="MemberUpdate.mem">회원정보수정</a>
 				      <a class="dropdown-item" href="javascript:memberDelete()">회원탈퇴</a>
-				      <a class="dropdown-item" href="#">관리자메뉴</a>
+				      <c:if test="${sLevel > 1}">
+					      <a class="dropdown-item" href="MemberList.mem">회원리스트</a>
+					      <a class="dropdown-item" href="#">쪽지보내기</a>
+					      <a class="dropdown-item" href="#">일정관리</a>
+				      </c:if>
+				      <a class="dropdown-item" href="#">포인트사용내역</a>
+				      <c:if test="${sLevel == 0}"><a class="dropdown-item" href="#">관리자메뉴</a></c:if>
 				    </div>
 				  </div>
 	      </li>

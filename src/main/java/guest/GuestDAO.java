@@ -138,4 +138,25 @@ public class GuestDAO {
 		}
 		return totRecCnt;
 	}
+
+	// 방명록에 올린 글 횟수 가져오기
+	public int getGuestCnt(String mid, String name, String nickName) {
+		int guestCnt = 0;
+		try {
+			sql = "select count(idx) as guestCnt from guest where name=? or name=? or name=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, mid);					
+			pstmt.setString(2, name);					
+			pstmt.setString(3, nickName);
+			rs = pstmt.executeQuery();
+			
+			rs.next();
+			guestCnt = rs.getInt("guestCnt");
+		} catch (SQLException e) {
+			System.out.println("SQL 오류 : " + e.getMessage());
+		} finally {
+			rsClose();
+		}
+		return guestCnt;
+	}
 }

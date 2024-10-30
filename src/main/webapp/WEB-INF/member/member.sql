@@ -30,5 +30,7 @@ drop table member;
 insert into member values (default,'admin','asdf1234','관리맨','관리자','남자',default,'010-3423-2704','28575 충북 청주시 서원구 사직대로 109, 4층','cjsk1126@naver.com','관리자입니다.',default,default,default,default,default,default,default,default,default);
 
 select * from member;
+select max(point) as point, mid,name from member;
 
 delete from member where idx = 2;
+

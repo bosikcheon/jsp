@@ -10,7 +10,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>.jsp</title>
+  <title>memberJoin.jsp</title>
   <jsp:include page="/include/bs4.jsp" />
   <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
   <script src="${ctp}/js/woo.js"></script>
@@ -29,7 +29,7 @@
   	// 정규식을 이용한 유효성검사처리.....
   	let regMid = /^[a-zA-Z0-9_]{4,20}$/;	// 아이디는 4~20의 영문 대/소문자와 숫자와 밑줄 가능
     let regNickName = /^[가-힣0-9_]{2,20}$/;			// 닉네임은 한글, 숫자, 밑줄만 2~20자 가능
-    let regName = /^[가-힣a-zA-Z]{2,20}$/;				// 이름은 한글/영문 2~20자 가능
+    let regName = /^[가-힣a-zA-Z0-9]{2,20}$/;				// 이름은 한글/영문/숫자 2~20자 가능
     
     function fCheck() {
     	let mid = myform.mid.value;
@@ -125,6 +125,30 @@
     		window.open(url, "nickNameCheckWindow", "width=400px, height=250px");
     	}
     }
+    
+    // 닉네임 중복체크(AJax처리)
+    function nickNameAjaxCheck() {
+    	let nickName = myform.nickName.value;
+    	if(!regNickName.test(nickName)) {
+        alert("닉네임은 2자리 이상 한글만 사용가능합니다.");
+        myform.nickName.focus();
+        return false;
+      }
+    	nickCheckSw = 1;
+    	
+    	$.ajax({
+    		type : "get",
+    		url  : "NickNameAjaxCheck.mem",
+    		data : {nickName : nickName},
+    		success:function(res) {
+    			if(res != "0") alert("닉네임이 중복되었습니다.\n다른 닉네임을 사용하세요.");
+    			else alert("사용하실구 있는 닉네임 입니다.\n계속 처리해 주세요.");
+    		},
+    		error : function() {
+    			alert("전송오류!");
+    		}
+    	});
+    }
   </script>
 </head>
 <body>
@@ -160,7 +184,8 @@
           <div class="input-group">
 	          <input type="text" name="nickName" id="nickName" placeholder="닉네임을 입력하세요" class="form-control" required />
 	          <div class="input-group-append ml-1">
-	          	<input type="button" value="닉네임 중복체크" onclick="nickNameCheck()" id="nickNameBtn" class="form-control btn-secondary" />
+	          	<!-- <input type="button" value="닉네임 중복체크" onclick="nickNameCheck()" id="nickNameBtn" class="form-control btn-secondary" /> -->
+	          	<input type="button" value="닉네임 중복체크" onclick="nickNameAjaxCheck()" id="nickNameBtn" class="form-control btn-secondary" />
 	          </div>
           </div>
         </td>
@@ -199,16 +224,16 @@
         <th class="text-center"><label for="address" class="form-label">주소</label></th>
         <td>
           <div class="input-group mb-1">
-		      	<input type="text" name="postcode" id="sample6_postcode" placeholder="우편번호" class="form-control mr-1">
+		      	<input type="text" name="postcode" id="sample6_postcode" onclick="sample6_execDaumPostcode()" placeholder="우편번호" class="form-control mr-1" readonly>
 		      	<div class="input-group-append">
 							<input type="button" value="우편번호 찾기" onclick="sample6_execDaumPostcode()" class="btn btn-secondary">
 						</div>
 					</div>
-					<input type="text" name="address" id="sample6_address" size="50" placeholder="주소" class="form-control mb-1">
+					<input type="text" name="address" id="sample6_address" onclick="sample6_execDaumPostcode()" placeholder="주소" class="form-control mb-1" readonly>
 					<div class="input-group mb-1">
 						<input type="text" name="detailAddress" id="sample6_detailAddress" placeholder="상세주소" class="form-control mr-1">
 						<div class="input-group-append">
-							<input type="text" name="extraAddress" id="sample6_extraAddress" placeholder="참고항목" class="form-control">
+							<input type="text" name="extraAddress" id="sample6_extraAddress" onclick="sample6_execDaumPostcode()" placeholder="참고항목" class="form-control" readonly>
 						</div>
 					</div>
         </td>
