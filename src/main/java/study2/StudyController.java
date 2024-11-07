@@ -14,6 +14,13 @@ import study2.ajax.AjaxIdCheck0Command;
 import study2.ajax.AjaxIdCheck1Command;
 import study2.ajax.AjaxPointCheckCommand;
 import study2.password.PassCheckOkCommand;
+import study2.pdstest.FileDeleteCommand;
+import study2.pdstest.FileDownloadCommand;
+import study2.pdstest.FileUpload1OkCommand;
+import study2.pdstest.FileUpload2OkCommand;
+import study2.pdstest.FileUpload3OkCommand;
+import study2.pdstest.FileUpload4OkCommand;
+import study2.pdstest.JavaFileDownloadCommand;
 
 @SuppressWarnings("serial")
 @WebServlet("*.st")
@@ -63,6 +70,56 @@ public class StudyController extends HttpServlet {
 		}
 		else if(com.equals("/AjaxPointCheck")) {
 			command = new AjaxPointCheckCommand();
+			command.execute(request, response);
+			return;
+		}
+		else if(com.equals("/FileUpload")) {
+			viewPage += "/pdstest/fileUpload.jsp";
+		}
+		else if(com.equals("/FileUpload1")) {
+			viewPage += "/pdstest/fileUpload1.jsp";
+		}
+		else if(com.equals("/FileUpload2")) {
+			viewPage += "/pdstest/fileUpload2.jsp";
+		}
+		else if(com.equals("/FileUpload3")) {
+			viewPage += "/pdstest/fileUpload3.jsp";
+		}
+		else if(com.equals("/FileUpload4")) {
+			viewPage += "/pdstest/fileUpload4.jsp";
+		}
+		else if(com.equals("/FileUpload1Ok")) {
+			command = new FileUpload1OkCommand();
+			command.execute(request, response);
+			viewPage = "/include/message.jsp";
+		}
+		else if(com.equals("/FileUpload2Ok")) {
+			command = new FileUpload2OkCommand();
+			command.execute(request, response);
+			viewPage = "/include/message.jsp";
+		}
+		else if(com.equals("/FileUpload3Ok")) {
+			command = new FileUpload3OkCommand();
+			command.execute(request, response);
+			viewPage = "/include/message.jsp";
+		}
+		else if(com.equals("/FileUpload4Ok")) {
+			command = new FileUpload4OkCommand();
+			command.execute(request, response);
+			viewPage = "/include/message.jsp";
+		}
+		else if(com.equals("/FileDownload")) {
+			command = new FileDownloadCommand();
+			command.execute(request, response);
+			viewPage += "/pdstest/fileDownload.jsp";
+		}
+		else if(com.equals("/FileDelete")) {
+			command = new FileDeleteCommand();
+			command.execute(request, response);
+			return;
+		}
+		else if(com.equals("/JavaFileDownload")) {
+			command = new JavaFileDownloadCommand();
 			command.execute(request, response);
 			return;
 		}

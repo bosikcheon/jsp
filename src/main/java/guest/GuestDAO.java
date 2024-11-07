@@ -139,24 +139,35 @@ public class GuestDAO {
 		return totRecCnt;
 	}
 
-	// 방명록에 올린 글 횟수 가져오기
-	public int getGuestCnt(String mid, String name, String nickName) {
-		int guestCnt = 0;
+	// 자신이 방명록에 올린 글 가져오기
+	public ArrayList<GuestVO> getGuestCnt(String mid, String name, String nickName) {
+		ArrayList<GuestVO> vos = new ArrayList<GuestVO>();
 		try {
-			sql = "select count(idx) as guestCnt from guest where name=? or name=? or name=?";
+			// sql = "select count(idx) as guestCnt from guest where name=? or name=? or name=?";
+			sql = "select * from guest where name=? or name=? or name=?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, mid);					
-			pstmt.setString(2, name);					
+			pstmt.setString(1, mid);
+			pstmt.setString(2, name);
 			pstmt.setString(3, nickName);
 			rs = pstmt.executeQuery();
 			
-			rs.next();
-			guestCnt = rs.getInt("guestCnt");
+			while(rs.next()) {
+				vo = new GuestVO();
+				vo.setIdx(rs.getInt("idx"));
+				vo.setName(rs.getString("name"));
+				vo.setEmail(rs.getString("email"));
+				vo.setHomePage(rs.getString("homePage"));
+				vo.setVisitDate(rs.getString("visitDate"));
+				vo.setHostIp(rs.getString("hostIp"));
+				vo.setContent(rs.getString("content"));
+				
+				vos.add(vo);
+			}
 		} catch (SQLException e) {
 			System.out.println("SQL 오류 : " + e.getMessage());
 		} finally {
 			rsClose();
 		}
-		return guestCnt;
+		return vos;
 	}
 }

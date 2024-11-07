@@ -13,6 +13,13 @@
       text-align: center;
     }
   </style>
+  <script>
+    'use strict';
+    
+    function contentView(content) {
+    	$("#myModal #modalContent").html(content);
+    }
+  </script>
 </head>
 <body>
 <jsp:include page="/include/header.jsp" />
@@ -36,7 +43,9 @@
 	      <td>${st.count}</td>
 	      <td>${vo.nickName}</td>
 	      <c:if test="${vo.userInfor == '공개'}">
-		      <td>${vo.mid}</td>
+		      <c:if test="${empty vo.content}"><c:set var="content" value="내용없음" /></c:if>
+		      <c:if test="${!empty vo.content}"><c:set var="content" value="${vo.content}" /></c:if>
+		      <td><a href="#" onclick='contentView("${content}")' data-toggle="modal" data-target="#myModal">${vo.mid}</a></td>
 		      <td>${vo.name}</td>
 		      <td>${vo.gender}</td>
 		      <td>${fn:substring(vo.birthday,0,10)}</td>
@@ -53,6 +62,47 @@
   	</c:forEach>
   	<tr><td colspan="8" class="m-0 p-0"></td></tr>
   </table>
+  
+<!-- 블록페이지 시작 -->
+<div class="text-center">
+  <ul class="pagination justify-content-center">
+	  <c:if test="${pag > 1}"><li class="page-item"><a class="page-link text-secondary" href="MemberList.mem?pag=1&pageSize=${pageSize}">첫페이지</a></li></c:if>
+	  <c:if test="${curBlock > 0}"><li class="page-item"><a class="page-link text-secondary" href="MemberList.mem?pag=${(curBlock-1)*blockSize + 1}&pageSize=${pageSize}">이전블록</a></li></c:if>
+	  <c:forEach var="i" begin="${(curBlock*blockSize)+1}" end="${(curBlock*blockSize) + blockSize}" varStatus="st">
+	    <c:if test="${i <= totPage && i == pag}"><li class="page-item active"><a class="page-link bg-secondary border-secondary" href="MemberList.mem?pag=${i}&pageSize=${pageSize}">${i}</a></li></c:if>
+	    <c:if test="${i <= totPage && i != pag}"><li class="page-item"><a class="page-link text-secondary" href="MemberList.mem?pag=${i}&pageSize=${pageSize}">${i}</a></li></c:if>
+	  </c:forEach>
+	  <c:if test="${curBlock < lastBlock}"><li class="page-item"><a class="page-link text-secondary" href="MemberList.mem?pag=${(curBlock+1)*blockSize+1}&pageSize=${pageSize}">다음블록</a></li></c:if>
+	  <c:if test="${pag < totPage}"><li class="page-item"><a class="page-link text-secondary" href="MemberList.mem?pag=${totPage}&pageSize=${pageSize}">마지막페이지</a></li></c:if>
+  </ul>
+</div>
+<!-- 블록페이지 끝 -->
+
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+    
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h3 class="modal-title">자기소개</h3>
+        <button type="button" class="close" data-dismiss="modal">×</button>
+      </div>
+      
+      <!-- Modal body -->
+      <div class="modal-body">
+        <span id="modalContent">${vo.content}</span>
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
 </div>
 <p><br/></p>
 <jsp:include page="/include/footer.jsp" />

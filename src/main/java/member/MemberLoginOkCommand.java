@@ -2,6 +2,7 @@ package member;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import common.SecurityUtil;
 import guest.GuestDAO;
+import guest.GuestVO;
 
 public class MemberLoginOkCommand implements MemberInterface {
 
@@ -84,7 +86,7 @@ public class MemberLoginOkCommand implements MemberInterface {
 		
 		// 회원등급별 등급명칭을 strLevel변수에 저장한다.(자동등업에서도 사용하기에 메소드처리했다.)
 		String strLevel = strLevelProcess(vo.getLevel());
-		session.setAttribute("strLevel", strLevel);
+		session.setAttribute("sStrLevel", strLevel);
 		
 		// 방문포인트 10증가, 방문카운트(총/오늘) 1증가, 마지막날짜(최종방문일자) 수정
 		Date today = new Date();
@@ -110,7 +112,8 @@ public class MemberLoginOkCommand implements MemberInterface {
 		if(vo.getLevel() == 1) {
 			GuestDAO gDao = new GuestDAO();
 			vo = dao.getMemberIdCheck(mid);
-			if(vo.getVisitCnt() >= 10 && gDao.getGuestCnt(mid, vo.getName(), vo.getNickName()) >= 2) {
+			ArrayList<GuestVO> gVos = gDao.getGuestCnt(mid, vo.getName(), vo.getNickName());
+			if(vo.getVisitCnt() >= 10 && gVos.size() >= 2) {
 				dao.setMemberLevelUpdate(vo.getIdx(), 2);
 				session.setAttribute("sLevel", 2);
 				session.setAttribute("strLevel", strLevelProcess(2));

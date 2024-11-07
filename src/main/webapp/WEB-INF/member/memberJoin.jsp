@@ -44,7 +44,7 @@
     	
     	let tel = myform.tel1.value + "-" + tel2 + "-" + tel3;
     	let email = myform.email1.value + "@" + myform.email2.value;
-    	let address = myform.postcode.value+" /"+myform.address.value+" /"+myform.detailAddress.value+" /"+myform.extraAddress.value;
+    	let address = myform.postcode.value+" /"+myform.address.value+" /"+myform.detailAddress.value+" /"+myform.extraAddress.value+" ";
     	
     	if(!regMid.test(mid)) {
     		alert("아이디는 4~20자리의 영문 소/대문자와 숫자, 언더바(_)만 사용가능합니다.");
@@ -246,6 +246,7 @@
 	          <div class="input-group-append ml-1">
 		          <select id="email2" name="email2" class="form-control">
 		            <option value="naver.com">naver.com</option>
+		            <option value="hanmail.net">hanmail.net</option>
 		            <option value="daum.net">daum.net</option>
 		            <option value="gmail.com">gmail.com</option>
 		          </select>

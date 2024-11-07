@@ -52,7 +52,7 @@ public class MemberDAO {
 				sw = 1;
 			}
 			if(sw == 0) {
-				sql = "select * from member where mid = ?";
+				sql = "select * from member where mid = ? and userDel != 'OK'";
 			}
 			else {
 				sql = "select * from member where nickName = ?";
@@ -189,11 +189,22 @@ public class MemberDAO {
 	}
 
 	// 전체 회원 리스트 처리
-	public ArrayList<MemberVO> getMemberList() {
+	public ArrayList<MemberVO> getMemberList(int startIndexNo, int pageSize, int level) {
 		ArrayList<MemberVO> vos = new ArrayList<MemberVO>();
 		try {
-			sql = "select * from member order by idx desc";
-			pstmt = conn.prepareStatement(sql);
+			if(level == 999) {
+				sql = "select *, datediff(now(), lastDate) as elapsed_date from member order by idx desc limit ?,?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, startIndexNo);
+				pstmt.setInt(2, pageSize);
+			}
+			else {
+				sql = "select *, datediff(now(), lastDate) as elapsed_date from member where level=? order by idx desc limit ?,?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, level);
+				pstmt.setInt(2, startIndexNo);
+				pstmt.setInt(3, pageSize);
+			}
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -208,7 +219,14 @@ public class MemberDAO {
 				vo.setTel(rs.getString("tel"));
 				vo.setAddress(rs.getString("address"));
 				vo.setEmail(rs.getString("email"));
-				vo.setContent(rs.getString("content"));
+				
+				String content = rs.getString("content").replaceAll("\\r?\\n", "<br/>");	// 엔터키 제어코드에 따른 오류방지..
+				//content = content.replace("'", "&#39;");	// content안에 따옴표(') 또는 (")가 있을때 error발생
+				//content = content.replace("\"", "&quot;");// 큰따옴표로 변환해도 error발생
+				//content = content.replace("\"", "&#39;"); // 따라서 큰따옴표는 작은따옴표로 변경처리한다.
+				content = content.replace("'", "&#39;").replace("\"", "&#39;");	// content안에 따옴표(') 또는 (")가 있을때 error발생
+				vo.setContent(content);
+				
 				vo.setPhoto(rs.getString("photo"));
 				vo.setLevel(rs.getInt("level"));
 				vo.setUserInfor(rs.getString("userInfor"));
@@ -218,6 +236,7 @@ public class MemberDAO {
 				vo.setTodayCnt(rs.getInt("todayCnt"));
 				vo.setStartDate(rs.getString("startDate"));
 				vo.setLastDate(rs.getString("lastDate"));
+				vo.setElapsed_date(rs.getInt("elapsed_date"));
 				vos.add(vo);
 			}
 		} catch (SQLException e) {
@@ -242,5 +261,144 @@ public class MemberDAO {
 			pstmtClose();
 		}
 	}
-	
+
+	// 회원 정보 수정처리
+	public int setMemberUpdateOk(MemberVO vo) {
+		int res = 0;
+		try {
+			sql = "update member set name=?, nickName=?, gender=?, birthday=?, tel=?, "
+					+ "address=?, email=?, content=?, photo=?, userInfor=? where mid = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, vo.getName());
+			pstmt.setString(2, vo.getNickName());
+			pstmt.setString(3, vo.getGender());
+			pstmt.setString(4, vo.getBirthday());
+			pstmt.setString(5, vo.getTel());
+			pstmt.setString(6, vo.getAddress());
+			pstmt.setString(7, vo.getEmail());
+			pstmt.setString(8, vo.getContent());
+			pstmt.setString(9, vo.getPhoto());
+			pstmt.setString(10, vo.getUserInfor());
+			pstmt.setString(11, vo.getMid());
+			res = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("SQL 오류 : " + e.getMessage());
+		}	finally {
+			pstmtClose();
+		}
+		return res;
+	}
+
+	public int setMemberPwdCheckAjaxOk(String mid, String pwd) {
+		int res = 0;
+		try {
+			sql = "update member set pwd = ? where mid = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, pwd);
+			pstmt.setString(2, mid);
+			res = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("SQL 오류 : " + e.getMessage());
+		}	finally {
+			pstmtClose();
+		}
+		return res;
+	}
+
+	// 회원 탈퇴 신청 처리(userDel의 'NO' -> 'OK' 변경처리)
+	public int setMemberDeleteCheckOk(String mid) {
+		int res = 0;
+		try {
+			sql = "update member set userDel = 'OK', level = 99 where mid = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, mid);
+			res = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("SQL 오류 : " + e.getMessage());
+		}	finally {
+			pstmtClose();
+		}
+		return res;
+	}
+
+	// 회원 등급변경(관리자가 처리)
+	public int setMemberLevelChange(int level, int idx) {
+		int res = 0;
+		try {
+			sql = "update member set level = ? where idx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, level);
+			pstmt.setInt(2, idx);
+			res = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("SQL 오류 : " + e.getMessage());
+		}	finally {
+			pstmtClose();
+		}
+		return res;
+	}
+
+	// 회원의 총 인원수 구하기
+	public int getTotRecCnt(int level) {
+		int totRecCnt = 0;
+		try {
+			if(level == 999) {
+				sql = "select count(idx) as totRecCnt from member";
+				pstmt = conn.prepareStatement(sql);
+			}
+			else {
+				sql = "select count(idx) as totRecCnt from member where level = ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, level);
+			}
+			rs = pstmt.executeQuery();
+			
+			rs.next();
+			totRecCnt = rs.getInt("totRecCnt");
+		} catch (SQLException e) {
+			System.out.println("SQL 오류 : " + e.getMessage());
+		}	finally {
+			rsClose();
+		}
+		return totRecCnt;
+	}
+
+	// 회원 상세정보 가져오기
+	public MemberVO getMemberIdxCheck(int idx) {
+		MemberVO vo = new MemberVO();
+		try {  // 홍장군_nickName
+			sql = "select * from member where idx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idx);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				vo.setIdx(rs.getInt("idx"));
+				vo.setMid(rs.getString("mid"));
+				vo.setPwd(rs.getString("pwd"));
+				vo.setNickName(rs.getString("nickName"));
+				vo.setName(rs.getString("name"));
+				vo.setGender(rs.getString("gender"));
+				vo.setBirthday(rs.getString("birthday"));
+				vo.setTel(rs.getString("tel"));
+				vo.setAddress(rs.getString("address"));
+				vo.setEmail(rs.getString("email"));
+				vo.setContent(rs.getString("content"));
+				vo.setPhoto(rs.getString("photo"));
+				vo.setLevel(rs.getInt("level"));
+				vo.setUserInfor(rs.getString("userInfor"));
+				vo.setUserDel(rs.getString("userDel"));
+				vo.setPoint(rs.getInt("point"));
+				vo.setVisitCnt(rs.getInt("visitCnt"));
+				vo.setTodayCnt(rs.getInt("todayCnt"));
+				vo.setStartDate(rs.getString("startDate"));
+				vo.setLastDate(rs.getString("lastDate"));
+			}
+		} catch (SQLException e) {
+			System.out.println("SQL 오류 : " + e.getMessage());
+		}	finally {
+			rsClose();
+		}
+		return vo;
+	}
 }

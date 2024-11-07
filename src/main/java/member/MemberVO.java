@@ -22,7 +22,9 @@ public class MemberVO {
 	private String startDate;
 	private String lastDate;
 	
-	private String tempMid;	// 아이디 중복체크를위한 임시 아이디
+	private String tempMid;	  // 아이디 중복체크를위한 임시 아이디
+	private int elapsed_date;	// 최종접속 경과일(탈퇴시 사용)
+	private String strLevel;	// 회원등급명
 	
 	public int getIdx() {
 		return idx;
@@ -150,13 +152,25 @@ public class MemberVO {
 	public void setTempMid(String tempMid) {
 		this.tempMid = tempMid;
 	}
-	
+	public int getElapsed_date() {
+		return elapsed_date;
+	}
+	public void setElapsed_date(int elapsed_date) {
+		this.elapsed_date = elapsed_date;
+	}
+	public String getStrLevel() {
+		return strLevel;
+	}
+	public void setStrLevel(String strLevel) {
+		this.strLevel = strLevel;
+	}
 	@Override
 	public String toString() {
 		return "MemberVO [idx=" + idx + ", mid=" + mid + ", pwd=" + pwd + ", nickName=" + nickName + ", name=" + name
 				+ ", gender=" + gender + ", birthday=" + birthday + ", tel=" + tel + ", address=" + address + ", email=" + email
 				+ ", content=" + content + ", photo=" + photo + ", level=" + level + ", userInfor=" + userInfor + ", userDel="
 				+ userDel + ", point=" + point + ", visitCnt=" + visitCnt + ", todayCnt=" + todayCnt + ", startDate="
-				+ startDate + ", lastDate=" + lastDate + ", tempMid=" + tempMid + "]";
+				+ startDate + ", lastDate=" + lastDate + ", tempMid=" + tempMid + ", elapsed_date=" + elapsed_date
+				+ ", strLevel=" + strLevel + "]";
 	}
 }

@@ -1,26 +1,30 @@
-package member;
+package admin.board;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class MemberListCommand implements MemberInterface {
+import admin.AdminInterface;
+import board.BoardDAO;
+import board.BoardVO;
+
+public class BoardListCommand implements AdminInterface {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		MemberDAO dao = new MemberDAO();
+		BoardDAO dao = new BoardDAO();
 		
 		int pag = request.getParameter("pag")==null ? 1 : Integer.parseInt(request.getParameter("pag"));
-		int pageSize = request.getParameter("pageSize")==null ? 5 : Integer.parseInt(request.getParameter("pageSize"));
-		int totRecCnt = dao.getTotRecCnt(999);
+		int pageSize = request.getParameter("pageSize")==null ? 10 : Integer.parseInt(request.getParameter("pageSize"));
+		int totRecCnt = dao.getTotRecCnt("","");
 		int totPage = (totRecCnt % pageSize)==0 ? (totRecCnt / pageSize) : (totRecCnt / pageSize) + 1;
 		int startIndexNo = (pag - 1) * pageSize;
 		int curScrStartNo = totRecCnt - startIndexNo;
 		
-		ArrayList<MemberVO> vos = dao.getMemberList(startIndexNo, pageSize, 999);
+		List<BoardVO> vos = dao.getBoardList(startIndexNo, pageSize);
 		
 		int blockSize = 3;
 		int curBlock = (pag - 1) / blockSize;
@@ -35,7 +39,6 @@ public class MemberListCommand implements MemberInterface {
 		request.setAttribute("blockSize", blockSize);
 		request.setAttribute("curBlock", curBlock);
 		request.setAttribute("lastBlock", lastBlock);
-		
 	}
 
 }
